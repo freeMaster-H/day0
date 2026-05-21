@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘도 힘내세요</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #0f172a;
+            background-image: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        h1 {
+            font-size: 40px;
+            text-align: center;
+            margin: 0;
+            padding: 3rem 5rem;
+            background-color: rgba(240, 248, 255, 0.08);
+            border: 1px solid rgba(240, 248, 255, 0.25);
+            border-radius: 3rem;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0 30px rgba(240, 248, 255, 0.05);
+            backdrop-filter: blur(12px);
+            transition: opacity 0.4s ease, color 0.4s ease, text-shadow 0.4s ease;
+        }
+
+        h1.fade {
+            opacity: 0;
+        }
+
+        #next-btn {
+            padding: 0.85rem 2.5rem;
+            font-size: 17px;
+            font-weight: 600;
+            color: #ffffff;
+            border: none;
+            border-radius: 2rem;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.4s ease;
+            letter-spacing: 0.03em;
+        }
+
+        #next-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        #next-btn:active {
+            transform: translateY(0px);
+        }
+
+        #preview {
+            font-size: 15px;
+            text-align: center;
+            letter-spacing: 0.04em;
+            margin-top: -0.5rem;
+            transition: opacity 0.3s ease, color 0.4s ease;
+        }
+
+        #preview::before {
+            content: '다음 → ';
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.06em;
+            opacity: 0.7;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1 id="sentence">오늘도 힘내세요</h1>
+        <p id="preview"></p>
+        <button id="next-btn" onclick="nextSentence()">다음 문장 보기</button>
+    </div>
+
+    <script>
+        const sentences = [
+            "오늘도 힘내세요",
+            "당신은 할 수 있습니다 💪",
+            "작은 한 걸음이 큰 변화를 만듭니다",
+            "포기하지 마세요, 거의 다 왔어요 🌟",
+            "오늘 하루도 수고 많으셨습니다",
+            "내일은 더 나은 하루가 될 거예요 ☀️",
+            "지금 이 순간, 최선을 다하고 있습니다",
+        ];
+
+        // 각 문장마다 고유 색상 (현재 문장용)
+        const colors = [
+            { text: '#e0f2fe', glow: 'rgba(224, 242, 254, 0.7)' },   // 하늘
+            { text: '#a5f3fc', glow: 'rgba(165, 243, 252, 0.7)' },   // 시안
+            { text: '#c4b5fd', glow: 'rgba(196, 181, 253, 0.7)' },   // 보라
+            { text: '#86efac', glow: 'rgba(134, 239, 172, 0.7)' },   // 초록
+            { text: '#fde68a', glow: 'rgba(253, 230, 138, 0.7)' },   // 노랑
+            { text: '#fdba74', glow: 'rgba(253, 186, 116, 0.7)' },   // 오렌지
+            { text: '#f9a8d4', glow: 'rgba(249, 168, 212, 0.7)' },   // 핑크
+        ];
+
+        // 버튼·미리보기용 배경/글씨 색 (다음 문장 색과 동일)
+        const btnColors = [
+            { bg: 'linear-gradient(135deg, #0ea5e9, #38bdf8)', shadow: 'rgba(56,189,248,0.55)' },
+            { bg: 'linear-gradient(135deg, #06b6d4, #22d3ee)', shadow: 'rgba(34,211,238,0.55)' },
+            { bg: 'linear-gradient(135deg, #7c3aed, #a78bfa)', shadow: 'rgba(167,139,250,0.55)' },
+            { bg: 'linear-gradient(135deg, #16a34a, #4ade80)', shadow: 'rgba(74,222,128,0.55)' },
+            { bg: 'linear-gradient(135deg, #d97706, #fbbf24)', shadow: 'rgba(251,191,36,0.55)' },
+            { bg: 'linear-gradient(135deg, #ea580c, #fb923c)', shadow: 'rgba(251,146,60,0.55)' },
+            { bg: 'linear-gradient(135deg, #db2777, #f472b6)', shadow: 'rgba(244,114,182,0.55)' },
+        ];
+
+        let currentIndex = 0;
+
+        function applyCurrentColor(index) {
+            const h1 = document.getElementById('sentence');
+            const c = colors[index];
+            h1.style.color = c.text;
+            h1.style.textShadow = `0 0 20px ${c.glow}, 0 0 40px ${c.glow}`;
+        }
+
+        function applyNextColor(nextIndex) {
+            const btn = document.getElementById('next-btn');
+            const preview = document.getElementById('preview');
+            const bc = btnColors[nextIndex];
+            const tc = colors[nextIndex];
+
+            btn.style.background = bc.bg;
+            btn.style.boxShadow = `0 4px 20px ${bc.shadow}`;
+            preview.style.color = tc.text;
+        }
+
+        function updatePreview() {
+            const nextIndex = (currentIndex + 1) % sentences.length;
+            document.getElementById('preview').textContent = sentences[nextIndex];
+            applyNextColor(nextIndex);
+        }
+
+        function nextSentence() {
+            const el = document.getElementById('sentence');
+            const preview = document.getElementById('preview');
+            el.classList.add('fade');
+            preview.style.opacity = '0';
+
+            setTimeout(() => {
+                currentIndex = (currentIndex + 1) % sentences.length;
+                el.textContent = sentences[currentIndex];
+                el.classList.remove('fade');
+                applyCurrentColor(currentIndex);
+                updatePreview();
+                preview.style.opacity = '1';
+            }, 400);
+        }
+
+        // 초기 적용
+        applyCurrentColor(currentIndex);
+        updatePreview();
+    </script>
+</body>
+</html>
