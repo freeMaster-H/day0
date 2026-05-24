@@ -15,7 +15,12 @@
 
 <body>
     <header>
-        <h1>나의 첫 서비스</h1>
+        <h1>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon-lightning">
+                <path d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            나의 첫 서비스
+        </h1>
         <nav>
             <a href="#intro">소개</a>
             <a href="#features">기능</a>
@@ -75,26 +80,15 @@
             "지금 이 순간, 최선을 다하고 있습니다",
         ];
 
-        // 각 문장마다 고유 색상 (현재 문장용)
+        // 각 문장마다 고유 색상 (현재 문장용, 테마에 어울리는 초록/에메랄드/테일 계열)
         const colors = [
-            { text: '#0284c7', glow: 'rgba(2, 132, 199, 0.15)' },   // 하늘
-            { text: '#0891b2', glow: 'rgba(8, 145, 178, 0.15)' },   // 시안
-            { text: '#6d28d9', glow: 'rgba(109, 40, 217, 0.15)' },   // 보라
-            { text: '#16a34a', glow: 'rgba(22, 163, 74, 0.15)' },   // 초록
-            { text: '#ca8a04', glow: 'rgba(202, 138, 4, 0.15)' },   // 노랑
-            { text: '#ea580c', glow: 'rgba(234, 88, 12, 0.15)' },   // 오렌지
-            { text: '#db2777', glow: 'rgba(219, 39, 119, 0.15)' },   // 핑크
-        ];
-
-        // 버튼·미리보기용 배경/글씨 색 (다음 문장 색과 동일)
-        const btnColors = [
-            { bg: 'linear-gradient(135deg, #0ea5e9, #38bdf8)', shadow: 'rgba(56,189,248,0.55)' },
-            { bg: 'linear-gradient(135deg, #06b6d4, #22d3ee)', shadow: 'rgba(34,211,238,0.55)' },
-            { bg: 'linear-gradient(135deg, #7c3aed, #a78bfa)', shadow: 'rgba(167,139,250,0.55)' },
-            { bg: 'linear-gradient(135deg, #16a34a, #4ade80)', shadow: 'rgba(74,222,128,0.55)' },
-            { bg: 'linear-gradient(135deg, #d97706, #fbbf24)', shadow: 'rgba(251,191,36,0.55)' },
-            { bg: 'linear-gradient(135deg, #ea580c, #fb923c)', shadow: 'rgba(251,146,60,0.55)' },
-            { bg: 'linear-gradient(135deg, #db2777, #f472b6)', shadow: 'rgba(244,114,182,0.55)' },
+            { text: '#0d9488', glow: 'rgba(13, 148, 136, 0.15)' },   // 테일
+            { text: '#065f46', glow: 'rgba(6, 95, 70, 0.15)' },     // 깊은 에메랄드
+            { text: '#15803d', glow: 'rgba(21, 128, 61, 0.15)' },    // 포레스트 그린
+            { text: '#0f766e', glow: 'rgba(15, 118, 110, 0.15)' },   // 오션 테일
+            { text: '#047857', glow: 'rgba(4, 120, 87, 0.15)' },     // 에메랄드 그린
+            { text: '#166534', glow: 'rgba(22, 101, 52, 0.15)' },    // 다크 그린
+            { text: '#0369a1', glow: 'rgba(3, 105, 161, 0.15)' },    // 청록색 계열 스카이 블루
         ];
 
         let currentIndex = 0;
@@ -107,13 +101,9 @@
         }
 
         function applyNextColor(nextIndex) {
-            const btn = document.getElementById('next-btn');
             const preview = document.getElementById('preview');
-            const bc = btnColors[nextIndex];
             const tc = colors[nextIndex];
 
-            btn.style.background = bc.bg;
-            btn.style.boxShadow = `0 4px 20px ${bc.shadow}`;
             preview.style.color = tc.text;
         }
 
