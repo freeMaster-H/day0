@@ -119,10 +119,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (lines.length <= 1) return { votes: parsedVotes, feed: feedItems };
     
     // Extract headers
-    const headers = lines[0].split(',').map(h => h.trim().toLowerCase());
+    const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^["']|["']$/g, ''));
     const menuIdx = headers.indexOf('menu');
     const voterIdx = headers.indexOf('voter');
     const timeIdx = headers.indexOf('timestamp');
+
+    const cleanCell = (cell) => {
+      if (!cell) return '';
+      return cell.trim().replace(/^["']|["']$/g, '');
+    };
 
     for (let i = 1; i < lines.length; i++) {
       const line = lines[i].trim();
@@ -131,9 +136,9 @@ document.addEventListener('DOMContentLoaded', () => {
       const cols = line.split(',').map(c => c.trim());
       if (cols.length <= Math.max(menuIdx, voterIdx)) continue;
 
-      const menuVal = cols[menuIdx] ? cols[menuIdx].toLowerCase() : '';
-      const voterVal = cols[voterIdx] || '익명';
-      const timeVal = cols[timeIdx] || '';
+      const menuVal = cols[menuIdx] ? cleanCell(cols[menuIdx]).toLowerCase() : '';
+      const voterVal = cols[voterIdx] ? cleanCell(cols[voterIdx]) : '익명';
+      const timeVal = cols[timeIdx] ? cleanCell(cols[timeIdx]) : '';
 
       let key = null;
       if (menuVal === '비빔밥' || menuVal === 'bibimbap') key = 'bibimbap';
