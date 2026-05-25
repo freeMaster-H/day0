@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- State & Config ---
   const SHEET_URL = 'https://docs.google.com/spreadsheets/d/17_TaBM8R56Bk0HgDWYw3oxtWooS8R2hMrWLtMgjAQl4/export?format=csv';
   const MENU_KEYS = ['bibimbap', 'donkatsu', 'gukbap', 'salad'];
-  
+
   const MENU_DETAILS = {
     bibimbap: { name: '비빔밥', emoji: '🍲', class: 'bibimbap' },
     donkatsu: { name: '돈까스', emoji: '🥩', class: 'donkatsu' },
@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // --- Initial Rendering & Polling ---
   // Load initial data from Google Sheet
   fetchSheetData(true);
-  
+
   // Poll the sheet every 5 seconds for real-time updates
   const pollingInterval = setInterval(() => {
     fetchSheetData(false);
@@ -62,10 +62,10 @@ document.addEventListener('DOMContentLoaded', () => {
     selectedMenu = userVote;
     const card = document.querySelector(`.menu-card[data-menu="${userVote}"]`);
     if (card) card.classList.add('selected');
-    
+
     const savedName = localStorage.getItem('user_lunch_name');
     if (savedName) usernameInput.value = savedName;
-    
+
     updateVoteButtonState(true);
   }
 
@@ -79,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const menu = card.getAttribute('data-menu');
       menuCards.forEach(c => c.classList.remove('selected'));
-      
+
       if (selectedMenu === menu) {
         selectedMenu = null;
         voteBtn.disabled = true;
@@ -95,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!selectedMenu || userVote) return;
 
     const nickname = usernameInput.value.trim() || '익명';
-    
+
     // Save locally
     userVote = selectedMenu;
     localStorage.setItem('user_lunch_vote', selectedMenu);
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const feedItems = [];
 
     if (lines.length <= 1) return { votes: parsedVotes, feed: feedItems };
-    
+
     // Extract headers
     const headers = lines[0].split(',').map(h => h.trim().toLowerCase().replace(/^["']|["']$/g, ''));
     const menuIdx = headers.indexOf('menu');
@@ -166,7 +166,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const response = await fetch(`${SHEET_URL}&t=${Date.now()}`);
       if (!response.ok) throw new Error('Sheet data fetch failed');
       const text = await response.text();
-      
+
       const parsed = parseCSV(text);
 
       // Merge user vote locally if they have voted (adds +1 to the local tally)
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
       voteBtn.disabled = true;
       voteBtn.innerHTML = '<span>투표 완료 ✓</span>';
       voteBtn.style.background = 'linear-gradient(135deg, #10b981 0%, #059669 100%)';
-      voteBtn.style.boxShadow = '0 10px 25px -5px rgba(16, 185, 129, 0.4)';
+      voteBtn.style.boxShadow = '0 10px 25px -5px rgba(130, 165, 153, 0.4)';
       usernameInput.disabled = true;
     }
   }
@@ -211,11 +211,11 @@ document.addEventListener('DOMContentLoaded', () => {
     MENU_KEYS.forEach(key => {
       const count = votes[key] || 0;
       const percentage = total > 0 ? Math.round((count / total) * 100) : 0;
-      
+
       // Update text values
       document.getElementById(`count-${key}`).textContent = `(${count}표)`;
       document.getElementById(`percent-${key}`).textContent = `${percentage}%`;
-      
+
       // Update progress bar width
       const bar = document.getElementById(`bar-${key}`);
       bar.style.width = `${percentage}%`;
@@ -268,7 +268,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const feedItem = document.createElement('div');
       feedItem.className = 'feed-item';
-      
+
       const firstChar = item.name.charAt(0);
 
       feedItem.innerHTML = `
@@ -290,30 +290,30 @@ document.addEventListener('DOMContentLoaded', () => {
   function triggerConfetti() {
     const colors = ['#4f46e5', '#3b82f6', '#10b981', '#f59e0b', '#ef4444', '#ec4899'];
     const particleCount = 70;
-    
+
     for (let i = 0; i < particleCount; i++) {
       const confetti = document.createElement('div');
       confetti.className = 'confetti';
-      
+
       const color = colors[Math.floor(Math.random() * colors.length)];
       const left = Math.random() * 100;
       const size = Math.floor(Math.random() * 8) + 6;
       const duration = (Math.random() * 2) + 2;
       const delay = Math.random() * 0.4;
-      
+
       confetti.style.backgroundColor = color;
       confetti.style.left = `${left}%`;
       confetti.style.width = `${size}px`;
       confetti.style.height = `${size}px`;
       confetti.style.animationDuration = `${duration}s`;
       confetti.style.animationDelay = `${delay}s`;
-      
+
       if (Math.random() > 0.5) {
         confetti.style.borderRadius = '50%';
       }
-      
+
       document.body.appendChild(confetti);
-      
+
       setTimeout(() => {
         confetti.remove();
       }, (duration + delay) * 1000);
